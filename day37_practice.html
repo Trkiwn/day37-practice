@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>After-Lecture Practice — Processes &amp; Flowcharts</title>
+<style>
+  :root {
+    --navy: #1A2A4A;
+    --blue: #0275D8;
+    --purple: #8E44AD;
+    --amber: #D97706;
+    --green: #5CB85C;
+    --red: #D9534F;
+    --bg: #F4F6F9;
+    --card: #FFFFFF;
+    --border: #E1E6ED;
+    --text: #24303F;
+    --muted: #64748B;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 0 0 60px 0;
+    line-height: 1.55;
+  }
+  header {
+    background: linear-gradient(135deg, var(--navy), #2b3f6b);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+  }
+  header h1 { margin: 0 0 6px; font-size: 1.5rem; }
+  header p { margin: 0; opacity: 0.85; font-size: 0.95rem; }
+
+  .container { max-width: 880px; margin: 0 auto; padding: 0 18px; }
+
+  .timebar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+    font-size: 0.82rem;
+  }
+  .timebar span {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    color: var(--muted);
+  }
+  .timebar span strong { color: var(--navy); }
+
+  .section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-top: 24px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(20,30,60,0.05);
+  }
+  .section-head {
+    padding: 14px 20px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .section-head-left { display: flex; align-items: center; gap: 10px; }
+  .section-head .tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: rgba(255,255,255,0.22);
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: 700;
+  }
+  .section-head .time-tag {
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.14);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .section-head h2 { margin: 0; font-size: 1.08rem; }
+  .basic .section-head { background: var(--blue); }
+  .intermediate .section-head { background: var(--purple); }
+  .advanced .section-head { background: var(--amber); }
+  .application .section-head { background: var(--navy); }
+
+  .section-body { padding: 18px 20px 22px; }
+  .instructions { font-style: italic; color: var(--muted); margin-bottom: 16px; font-size: 0.92rem; }
+
+  .q-item { margin-bottom: 18px; }
+  .q-item .q-num { font-weight: 700; color: var(--navy); margin-right: 6px; }
+  .q-type {
+    display: inline-block;
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    color: white;
+    background: var(--muted);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .q-type.mcq { background: var(--blue); }
+  .q-type.tf { background: var(--red); }
+  .q-type.fix { background: #B45309; }
+  .q-type.write { background: var(--green); }
+  .q-type.check { background: var(--amber); }
+
+  .choice-group { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+  .choice-group label {
+    font-weight: 400;
+    cursor: pointer;
+    background: #F7F9FC;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+  }
+  .choice-group label:hover { border-color: var(--blue); }
+  .choice-group input { margin-right: 8px; }
+
+  select {
+    padding: 7px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: white;
+  }
+
+  textarea, input[type=text] {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: vertical;
+    background: #FCFCFD;
+  }
+  textarea:focus, input:focus, select:focus { outline: 2px solid var(--blue); outline-offset: 1px; background: white; }
+
+  .task-block {
+    background: #F7F9FC;
+    border-left: 4px solid var(--purple);
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: 0.92rem;
+  }
+  .task-block.diagram { border-left-color: var(--navy); }
+
+  .image-placeholder {
+    border: 2px dashed #B9C2CE;
+    border-radius: 10px;
+    padding: 46px 20px;
+    text-align: center;
+    color: var(--muted);
+    background: #FAFBFC;
+    margin-bottom: 14px;
+  }
+  .image-placeholder .placeholder-icon { font-size: 2.6rem; margin-bottom: 10px; }
+  .image-placeholder strong { color: var(--text); }
+  .image-placeholder .placeholder-hint { font-size: 0.78rem; margin-top: 8px; color: var(--muted); }
+
+  .checklist { margin-top: 14px; font-size: 0.9rem; }
+  .checklist label { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; cursor: pointer; }
+  .checklist input { margin-top: 3px; }
+
+  .word-count { font-size: 0.78rem; color: var(--muted); text-align: right; margin-top: 4px; }
+  .inline-fix { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+  .inline-fix input[type=text] { flex: 1; min-width: 220px; }
+  .stmt-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .stmt-row span.stmt { flex: 1; min-width: 220px; }
+
+  .submit-panel {
+    background: var(--navy);
+    color: white;
+    border-radius: 10px;
+    margin-top: 30px;
+    padding: 24px 22px;
+  }
+  .submit-panel h2 { margin: 0 0 6px; font-size: 1.2rem; }
+  .submit-panel p { margin: 0 0 16px; opacity: 0.85; font-size: 0.92rem; }
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.1s ease, opacity 0.2s ease;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--amber); color: white; }
+  .btn-secondary { background: rgba(255,255,255,0.14); color: white; border: 1px solid rgba(255,255,255,0.3); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .status-msg {
+    margin-top: 14px;
+    font-size: 0.88rem;
+    padding: 10px 14px;
+    border-radius: 7px;
+    display: none;
+  }
+  .status-msg.show { display: block; }
+  .status-ok { background: rgba(92,184,92,0.18); border: 1px solid rgba(92,184,92,0.4); }
+  .status-warn { background: rgba(217,83,79,0.18); border: 1px solid rgba(217,83,79,0.4); }
+
+  .preview-box {
+    margin-top: 18px;
+    background: rgba(0,0,0,0.25);
+    border-radius: 8px;
+    padding: 14px;
+    max-height: 260px;
+    overflow-y: auto;
+    display: none;
+  }
+  .preview-box.show { display: block; }
+  .preview-box pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 0;
+    font-family: 'Consolas', monospace;
+    font-size: 0.8rem;
+    color: #E8EDF5;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin-top: 34px;
+    padding: 0 20px;
+  }
+
+  .check-panel {
+    background: white;
+    border: 2px solid var(--green);
+    border-radius: 10px;
+    margin-top: 30px;
+    padding: 20px 22px;
+    text-align: center;
+  }
+  .check-panel h2 { margin: 0 0 6px; font-size: 1.15rem; color: var(--navy); }
+  .check-panel p { margin: 0 0 14px; color: var(--muted); font-size: 0.9rem; }
+  .btn-check {
+    border: none;
+    background: var(--green);
+    color: white;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-check:active { transform: scale(0.97); }
+
+  .feedback {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 6px;
+  }
+  .feedback.correct { background: rgba(92,184,92,0.16); color: #2E7D32; border: 1px solid rgba(92,184,92,0.45); }
+  .feedback.incorrect { background: rgba(217,83,79,0.14); color: #B3261E; border: 1px solid rgba(217,83,79,0.4); }
+
+  .suggested {
+    margin-top: 6px;
+    background: #EFF6FF;
+    border: 1px solid rgba(2,117,216,0.3);
+    border-left: 4px solid var(--blue);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+  .suggested strong { color: var(--blue); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Processes &amp; Flowcharts</h1>
+  <p>Week 20, Day 37 — After-Lecture Practice</p>
+</header>
+
+<div class="container">
+
+  <div class="timebar">
+    <span>🔵 Basic <strong>~12 min</strong></span>
+    <span>🟣 Intermediate <strong>~24 min</strong></span>
+    <span>🟠 Advanced <strong>~16 min</strong></span>
+    <span>🔷 Application <strong>~12 min</strong></span>
+  </div>
+
+  <!-- ============ BASIC ============ -->
+  <div class="section basic">
+    <div class="section-head"><div class="section-head-left"><span class="tag">Basic</span><h2>Recognizing the Rules</h2></div><span class="time-tag">~12 min</span></div>
+    <div class="section-body">
+      <p class="instructions">Five quick checks on today's core rules before you build a full report.</p>
+
+      <div class="q-item">
+        <span class="q-num">1.</span>A diagram ends at a final product with no arrow looping back to stage 1. Is this process...<span class="q-type mcq">Multiple Choice</span>
+        <div class="choice-group">
+          <label><input type="radio" name="b1" value="Linear"> A. Linear</label>
+          <label><input type="radio" name="b1" value="Cyclical"> B. Cyclical</label>
+        </div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-num">2.</span>The dough <select id="b2"><option value="">-- choose --</option><option>roll</option><option>rolled</option><option>is rolled</option></select> into thin sheets.<span class="q-type mcq">Choose the Form</span>
+      </div>
+
+      <div class="q-item">
+        <span class="q-num">3.</span>"A process overview should focus on reporting specific numbers from the diagram, just like a Data Table overview."<span class="q-type tf">True / False</span>
+        <div class="choice-group">
+          <label><input type="radio" name="b3" value="True"> True</label>
+          <label><input type="radio" name="b3" value="False"> False</label>
+        </div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-num">4.</span>"First, the beans are sorted. Then, they are roasted. ______, the roasted beans are ground and packaged."<span class="q-type mcq">Multiple Choice</span>
+        <div class="choice-group">
+          <label><input type="radio" name="b4" value="Then"> A. Then</label>
+          <label><input type="radio" name="b4" value="Next"> B. Next</label>
+          <label><input type="radio" name="b4" value="Finally"> C. Finally</label>
+        </div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-num">5.</span>"The diagram shows water evaporating, forming clouds, falling as rain, and flowing back into the ocean, where it evaporates again." Is this process...<span class="q-type mcq">Multiple Choice</span>
+        <div class="choice-group">
+          <label><input type="radio" name="b5" value="Linear"> A. Linear</label>
+          <label><input type="radio" name="b5" value="Cyclical"> B. Cyclical</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ INTERMEDIATE ============ -->
+  <div class="section intermediate">
+    <div class="section-head"><div class="section-head-left"><span class="tag">Intermediate</span><h2>Fix, Classify, and Construct</h2></div><span class="time-tag">~24 min</span></div>
+    <div class="section-body">
+      <p class="instructions">Diagnose real problems, read a new flowchart, transform active sentences into passive, and combine two steps into one.</p>
+
+      <div class="q-item">
+        <span class="q-num">1.</span>Find the error, then rewrite the sentence correctly.<span class="q-type fix">Error Correction</span>
+        <div class="task-block">"First, you pour the batter onto the pan. Then you flip it after two minutes."</div>
+        <div class="inline-fix">
+          <input type="text" id="i1-error" placeholder="What is the error?">
+          <input type="text" id="i1-fix" placeholder="Your corrected sentence">
+        </div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-num">2.</span>This sentence mislabels the process. Find the error, then rewrite it correctly.<span class="q-type fix">Error Correction</span>
+        <div class="task-block">"The diagram shows the linear cycle of a butterfly, from egg to caterpillar to chrysalis to adult, which then lays eggs again."</div>
+        <div class="inline-fix">
+          <input type="text" id="i2-error" placeholder="What is the error?">
+          <input type="text" id="i2-fix" placeholder="Your corrected sentence">
+        </div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-num">3.</span>Read the flowchart. Identify the type, then write a 2-sentence overview.<span class="q-type write">Overview Writing</span>
+        <div class="task-block diagram">
+          <strong>The Process of Making Vietnamese Fish Sauce (N&#432;&#7899;c M&#7855;m)</strong><br>
+          1. Fresh anchovies are mixed with salt in large wooden barrels.<br>
+          2. The mixture is left to ferment for a period of 12 to 18 months.<br>
+          3. During fermentation, the liquid is periodically stirred and exposed to sunlight.<br>
+          4. Once fermentation is complete, the liquid is drained and filtered.<br>
+          5. The filtered sauce is bottled and labeled.<br>
+          6. The bottled sauce is distributed to markets for sale.
+        </div>
+        Type: <select id="i3-label"><option value="">-- choose --</option><option>Linear</option><option>Cyclical</option></select>
+        <textarea id="i3-overview" rows="2" placeholder="Write your 2-sentence overview here..." style="margin-top:8px;"></textarea>
+      </div>
+
+      <div class="q-item">
+        <span class="q-num">4.</span>Rewrite each active sentence in correct passive voice.<span class="q-type write">Passive Transformation</span>
+        <div class="task-block">a) "Workers pour the hot liquid into moulds."</div>
+        <input type="text" id="i4-1" placeholder="Your passive version...">
+        <div class="task-block" style="margin-top:10px;">b) "They heat the mixture to 90 degrees for ten minutes."</div>
+        <input type="text" id="i4-2" placeholder="Your passive version...">
+        <div class="task-block" style="margin-top:10px;">c) "Machines cut the sheets into equal strips."</div>
+        <input type="text" id="i4-3" placeholder="Your passive version...">
+      </div>
+
+      <div class="q-item">
+        <span class="q-num">5.</span>Combine these two steps into one sentence using "before being + past participle."<span class="q-type write">Sentence Combining</span>
+        <div class="task-block">Step A: The vegetables are washed thoroughly. &nbsp;&nbsp; Step B: The vegetables are chopped into small pieces.</div>
+        <textarea id="i5" rows="2" placeholder="Write your combined sentence here..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ADVANCED ============ -->
+  <div class="section advanced">
+    <div class="section-head"><div class="section-head-left"><span class="tag">Advanced</span><h2>Diagnose, Build &amp; Close the Loop</h2></div><span class="time-tag">~16 min</span></div>
+    <div class="section-body">
+      <p class="instructions">These items stack more than one issue at once, or test a flowchart with branching paths.</p>
+
+      <div class="q-item">
+        <span class="q-num">1.</span>This paragraph has more than one problem. Check every box that applies, then rewrite it.<span class="q-type check">Multi-Select + Fix</span>
+        <div class="task-block">"The diagram shows the linear life cycle of a frog, from egg to adult. First, you lay eggs in water. Then you watch them hatch into tadpoles. The tadpoles slowly grow legs and become frogs."</div>
+        <div class="checklist">
+          <label><input type="checkbox" id="a1-c1"> Wrong label -- the process is called "linear" but it is actually cyclical.</label>
+          <label><input type="checkbox" id="a1-c2"> Written in active "you" voice instead of the expected passive, report-style voice.</label>
+          <label><input type="checkbox" id="a1-c3"> Never states that the cycle repeats once the frog is an adult.</label>
+          <label><input type="checkbox" id="a1-c4"> There is no problem -- this paragraph is ready to use.</label>
+        </div>
+        <textarea id="a1-fix" rows="3" placeholder="Write your fully corrected paragraph here..." style="margin-top:10px;"></textarea>
+      </div>
+
+      <div class="q-item">
+        <span class="q-num">2.</span>This flowchart branches into three parallel paths. Write a body paragraph describing all three.<span class="q-type write">Full Paragraph</span>
+        <div class="task-block diagram">
+          <strong>The Process of Sorting Recyclable Waste at a Facility</strong><br>
+          1. Collected waste arrives at the facility and is placed on a conveyor belt.<br>
+          2. The waste is sorted into three categories: paper, plastic, and metal.<br>
+          3a. Paper is compressed into bales. &nbsp; 3b. Plastic is washed and shredded. &nbsp; 3c. Metal is melted down into blocks.<br>
+          4. All three materials are then transported to separate manufacturing plants for reuse.
+        </div>
+        <textarea id="a2" rows="4" placeholder="Write your body paragraph here, describing all three paths..."></textarea>
+      </div>
+
+      <div class="q-item">
+        <span class="q-num">3.</span>Write only the final, closing sentence for this cyclical process -- the one that shows the loop.<span class="q-type write">Sentence Writing</span>
+        <div class="task-block">Frog life cycle: egg &rarr; tadpole &rarr; froglet &rarr; adult frog &rarr; (back to the start)</div>
+        <input type="text" id="a3" placeholder="Write your closing sentence here...">
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ APPLICATION ============ -->
+  <div class="section application">
+    <div class="section-head"><div class="section-head-left"><span class="tag">Application</span><h2>Full Task: Complete Report</h2></div><span class="time-tag">~12 min</span></div>
+    <div class="section-body">
+
+      <!--
+        TEACHER: Replace the placeholder box below with your own process/flowchart image.
+        Easiest option -- delete the whole <div class="image-placeholder">...</div> block
+        and put this in its place, pointing "src" at your image file (keep the image in the
+        same folder as this HTML file, or use a full file path / URL):
+
+        <img src="your-diagram-filename.png" alt="Process diagram" style="max-width:100%; display:block; margin:0 auto 14px; border:1px solid #E1E6ED; border-radius:8px;">
+
+        The original text-based example (Vietnamese drip coffee) used to build this worksheet
+        is kept below, commented out, in case you want it back as a fallback:
+
+        <div class="task-block diagram">
+          <strong>The Process of Brewing Vietnamese Drip Coffee (C&agrave; Ph&ecirc; Phin)</strong><br>
+          1. Coarsely ground coffee is placed into the metal phin filter.<br>
+          2. The filter press is placed on top of the ground coffee and gently twisted down.<br>
+          3. A small amount of hot water is poured in first, allowing the coffee to "bloom" for 30 seconds.<br>
+          4. The phin is then filled with the remaining hot water.<br>
+          5. The coffee drips slowly through the filter into a cup over several minutes.<br>
+          6. Once dripping stops, the phin is removed and the coffee is ready to drink.
+        </div>
+      -->
+      <div class="image-placeholder">
+        <div class="placeholder-icon">🖼️</div>
+        <p><strong>Insert your process / flowchart diagram image here</strong></p>
+        <p class="placeholder-hint">Replace this box with an &lt;img&gt; tag pointing to your diagram file -- see the comment just above this box in the HTML source for the exact code to paste.</p>
+      </div>
+
+      <div class="q-item">
+        <span class="q-num">1.</span>Write your complete report: introduction, overview, and body paragraph(s).<span class="q-type write">Full Report</span>
+        <textarea id="app1" rows="7" placeholder="Write your complete report here..." oninput="updateWordCount('app1','app1-count')"></textarea>
+        <div class="word-count" id="app1-count">0 words</div>
+      </div>
+
+      <div class="checklist">
+        <label><input type="checkbox"> The process is correctly identified as linear or cyclical, based on whether the diagram loops back to stage 1</label>
+        <label><input type="checkbox"> The overview states the stage count and the start/end point, with zero numbers</label>
+        <label><input type="checkbox"> The whole body paragraph is written in passive voice, not active "you" instructions</label>
+        <label><input type="checkbox"> At least one sentence combines two steps using "before being + past participle"</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SELF-CHECK ============ -->
+  <div class="check-panel">
+    <h2>✅ Check Your Own Answers</h2>
+    <p>For multiple-choice and classification questions, this marks each one correct or incorrect and shows the right answer. For open writing questions, it shows a suggested answer for you to compare against.</p>
+    <button class="btn-check" onclick="checkAnswers()">✅ Check My Answers</button>
+    <div class="status-msg" id="checkStatus"></div>
+  </div>
+
+  <!-- ============ SUBMISSION ============ -->
+  <div class="submit-panel">
+    <h2>Send Your Answers to Your Teacher</h2>
+    <p>Click "Prepare Submission" to review everything below, then choose how to send it — by email, by copying the text, or by downloading it as a file to attach.</p>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="prepareSubmission()">📝 Prepare Submission</button>
+      <button class="btn btn-secondary" id="emailBtn" onclick="sendByEmail()" disabled>✉️ Open in Email App</button>
+      <button class="btn btn-secondary" id="copyBtn" onclick="copyToClipboard()" disabled>📋 Copy to Clipboard</button>
+      <button class="btn btn-secondary" id="downloadBtn" onclick="downloadAsFile()" disabled>⬇️ Download as .txt</button>
+    </div>
+    <div class="status-msg" id="statusMsg"></div>
+    <div class="preview-box" id="previewBox"><pre id="previewText"></pre></div>
+  </div>
+
+  <footer>
+    Teacher's email: kien.nguyen2411@outlook.com — if the email button doesn't open your mail app, use Copy or Download instead and send it manually.
+  </footer>
+</div>
+
+<script>
+/* ---------- Self-check answer key ---------- */
+const correctRadios = {
+  'b1': 'Linear', 'b3': 'False', 'b4': 'Finally', 'b5': 'Cyclical'
+};
+const correctSelects = {
+  'b2': 'is rolled', 'i3-label': 'Linear'
+};
+const suggestedAnswers = {
+  'i1-error': 'Active "you" voice used throughout, like an instruction manual, instead of passive report-style voice.',
+  'i1-fix': '"First, the batter is poured onto the pan. It is then flipped after two minutes."',
+  'i2-error': 'The word "linear" is wrong -- a process that loops back to the start (laying eggs again) is cyclical, not linear.',
+  'i2-fix': '"The diagram shows the life cycle of a butterfly, from egg to caterpillar to chrysalis to adult, which then lays eggs again and the cycle repeats."',
+  'i3-overview': 'Suggested: "It is clear that there are six stages in this linear process, beginning with the mixing of anchovies and salt and culminating with the finished sauce being distributed to markets."',
+  'i4-1': '"The hot liquid is poured into moulds."',
+  'i4-2': '"The mixture is heated to 90 degrees for ten minutes."',
+  'i4-3': '"The sheets are cut into equal strips."',
+  'i5': 'Suggested: "The vegetables are washed thoroughly before being chopped into small pieces."',
+  'a2': 'Suggested: "After arriving at the facility, the waste is placed on a conveyor belt and sorted into three categories: paper, plastic, and metal. The paper is compressed into bales, while the plastic is washed and shredded, and the metal is melted down into blocks. Finally, all three materials are transported to separate manufacturing plants for reuse."',
+  'a3': 'Suggested: "Once it reaches adulthood, the frog returns to the water to lay eggs, and the cycle begins again."',
+};
+
+function checkAnswers() {
+  for (const id in correctSelects) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    const correct = correctSelects[id];
+    const isCorrect = el.value === correct;
+    const fb = document.createElement('div');
+    fb.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
+    fb.dataset.for = id;
+    fb.textContent = isCorrect ? '✓ Correct' : ('✗ Your answer: ' + (el.value || '(blank)') + '  |  Correct answer: ' + correct);
+    const stmtRow = el.closest('.stmt-row');
+    if (stmtRow) {
+      const old = stmtRow.nextElementSibling;
+      if (old && old.dataset && old.dataset.for === id) { old.replaceWith(fb); } else { stmtRow.insertAdjacentElement('afterend', fb); }
+    } else {
+      // Select sits inline mid-sentence (e.g. b2) -- append at the end of the question instead of breaking the sentence flow
+      const qItem = el.closest('.q-item');
+      const old = qItem.querySelector('.feedback[data-for="' + id + '"]');
+      if (old) { old.replaceWith(fb); } else { qItem.appendChild(fb); }
+    }
+  }
+
+  for (const name in correctRadios) {
+    const radios = document.querySelectorAll('input[name="' + name + '"]');
+    if (!radios.length) continue;
+    const checked = document.querySelector('input[name="' + name + '"]:checked');
+    const correct = correctRadios[name];
+    const isCorrect = checked && checked.value === correct;
+    const group = radios[0].closest('.choice-group');
+    const fb = document.createElement('div');
+    fb.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
+    fb.dataset.for = name;
+    fb.textContent = isCorrect ? '✓ Correct' : ('✗ Your answer: ' + (checked ? checked.value : '(blank)') + '  |  Correct answer: ' + correct);
+    const old = document.querySelector('.feedback[data-for="' + name + '"]');
+    if (old) { old.replaceWith(fb); } else { group.insertAdjacentElement('afterend', fb); }
+  }
+
+  for (const id in suggestedAnswers) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    const box = document.createElement('div');
+    box.className = 'suggested';
+    box.dataset.for = id;
+    box.innerHTML = '<strong>Suggested answer:</strong> ' + suggestedAnswers[id];
+    const old = el.nextElementSibling;
+    if (old && old.dataset && old.dataset.for === id) { old.replaceWith(box); } else { el.insertAdjacentElement('afterend', box); }
+  }
+
+  // Advanced Q1 checkbox answer key (shown as a note, not auto-marked, since it's a multi-select self-diagnosis)
+  const a1note = document.createElement('div');
+  a1note.className = 'suggested';
+  a1note.dataset.for = 'a1-note';
+  a1note.innerHTML = '<strong>Answer key:</strong> Boxes 1, 2, and 3 should all be checked (wrong label, active voice, missing repeat). Box 4 ("no problem") is the distractor and should NOT be checked.';
+  const a1Checklist = document.getElementById('a1-c4').closest('.checklist');
+  const oldNote = a1Checklist.nextElementSibling;
+  if (oldNote && oldNote.dataset && oldNote.dataset.for === 'a1-note') { oldNote.replaceWith(a1note); } else { a1Checklist.insertAdjacentElement('afterend', a1note); }
+
+  const statusEl = document.getElementById('checkStatus');
+  statusEl.textContent = '✓ Checked! Green = correct, red = review needed, blue = suggested answer to compare against your own.';
+  statusEl.className = 'status-msg show status-ok';
+}
+
+/* ---------- Word count ---------- */
+function updateWordCount(taId, countId) {
+  const text = document.getElementById(taId).value.trim();
+  const words = text.length ? text.split(/\s+/).length : 0;
+  document.getElementById(countId).textContent = words + ' word' + (words === 1 ? '' : 's');
+}
+
+function radioVal(name) {
+  const el = document.querySelector('input[name="' + name + '"]:checked');
+  return el ? el.value : '(not answered)';
+}
+function val(id) {
+  const el = document.getElementById(id);
+  const v = el.value.trim();
+  return v.length ? v : '(not answered)';
+}
+function boxVal(id) {
+  const el = document.getElementById(id);
+  return el && el.checked ? '✔ checked' : '☐ not checked';
+}
+function checkVal(idx) {
+  const boxes = document.querySelectorAll('.checklist input[type=checkbox]');
+  return boxes[idx] && boxes[idx].checked ? '✔ checked' : '☐ not checked';
+}
+
+function buildSubmissionText() {
+  let out = '';
+  out += 'PROCESSES & FLOWCHARTS (Week 20, Day 37 — After-Lecture Practice)\n';
+  out += '========================================================\n\n';
+
+  out += '--- BASIC: Recognizing the Rules ---\n';
+  out += '1. Linear or Cyclical: ' + radioVal('b1') + '\n';
+  out += '2. Verb form chosen: ' + val('b2') + '\n';
+  out += '3. (True/False) Overview reports numbers: ' + radioVal('b3') + '\n';
+  out += '4. Connector chosen: ' + radioVal('b4') + '\n';
+  out += '5. Linear or Cyclical: ' + radioVal('b5') + '\n\n';
+
+  out += '--- INTERMEDIATE: Fix, Classify, and Construct ---\n';
+  out += '1. Error found: ' + val('i1-error') + '\n   Corrected: ' + val('i1-fix') + '\n';
+  out += '2. Error found: ' + val('i2-error') + '\n   Corrected: ' + val('i2-fix') + '\n';
+  out += '3. Fish sauce process -- Type: ' + val('i3-label') + '\n   Overview: ' + val('i3-overview') + '\n';
+  out += '4. Passive transformations:\n   a) ' + val('i4-1') + '\n   b) ' + val('i4-2') + '\n   c) ' + val('i4-3') + '\n';
+  out += '5. Combined sentence: ' + val('i5') + '\n\n';
+
+  out += '--- ADVANCED: Diagnose, Build & Close the Loop ---\n';
+  out += '1. Problems identified:\n';
+  out += '   ' + boxVal('a1-c1') + ' — wrong label\n';
+  out += '   ' + boxVal('a1-c2') + ' — active voice\n';
+  out += '   ' + boxVal('a1-c3') + ' — missing repeat statement\n';
+  out += '   ' + boxVal('a1-c4') + ' — "no problem" (distractor option)\n';
+  out += '   Rewrite: ' + val('a1-fix') + '\n';
+  out += '2. Branching paragraph (recycling facility): ' + val('a2') + '\n';
+  out += '3. Closing sentence (frog cycle): ' + val('a3') + '\n\n';
+
+  out += '--- APPLICATION: Full Task (Vietnamese drip coffee) ---\n';
+  out += val('app1') + '\n\n';
+  out += 'Self-check:\n';
+  out += '  ' + checkVal(0) + ' — correctly identified as linear\n';
+  out += '  ' + checkVal(1) + ' — overview has stage count + start/end, no numbers\n';
+  out += '  ' + checkVal(2) + ' — passive voice throughout\n';
+  out += '  ' + checkVal(3) + ' — at least one "before being" combined sentence\n';
+
+  return out;
+}
+
+let currentSubmission = '';
+
+function prepareSubmission() {
+  const statusEl = document.getElementById('statusMsg');
+  currentSubmission = buildSubmissionText();
+  document.getElementById('previewText').textContent = currentSubmission;
+  document.getElementById('previewBox').classList.add('show');
+  statusEl.textContent = '✓ Submission ready below. Choose how to send it.';
+  statusEl.className = 'status-msg show status-ok';
+  document.getElementById('emailBtn').disabled = false;
+  document.getElementById('copyBtn').disabled = false;
+  document.getElementById('downloadBtn').disabled = false;
+}
+
+function sendByEmail() {
+  const subject = encodeURIComponent('Week 20 Day 37 Processes and Flowcharts Practice');
+  const body = encodeURIComponent(currentSubmission);
+  window.location.href = 'mailto:kien.nguyen2411@outlook.com?subject=' + subject + '&body=' + body;
+}
+
+function copyToClipboard() {
+  navigator.clipboard.writeText(currentSubmission).then(() => {
+    const statusEl = document.getElementById('statusMsg');
+    statusEl.textContent = '✓ Copied to clipboard! You can now paste it into an email or message.';
+    statusEl.className = 'status-msg show status-ok';
+  }).catch(() => {
+    const statusEl = document.getElementById('statusMsg');
+    statusEl.textContent = '⚠ Could not copy automatically — please select the text in the box above and copy it manually.';
+    statusEl.className = 'status-msg show status-warn';
+  });
+}
+
+function downloadAsFile() {
+  const blob = new Blob([currentSubmission], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Week20_Day37_ProcessesFlowcharts_Practice.txt';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>
+
+</body>
+</html>
